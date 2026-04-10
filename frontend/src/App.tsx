@@ -10,6 +10,8 @@ import Cart from './pages/Cart';
 import Home from './pages/Home';
 import Products from './pages/Products';
 import Login from './pages/Login';
+import Checkout from './pages/Checkout';
+import AdminDashboard from './pages/AdminDashboard';
 import Favorites from './pages/Favorites';
 
 const Placeholder = ({ title }: { title: string }) => (
@@ -37,7 +39,8 @@ function AppShell() {
           <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
           <Route path="/about" element={<Placeholder title="About Us" />} />
           <Route path="/contact" element={<Placeholder title="Contact Us" />} />
-          <Route path="/checkout" element={<Placeholder title="Checkout" />} />
+          <Route path="/checkout" element={<Checkout />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/shipping" element={<Placeholder title="Shipping Policy" />} />
           <Route path="/terms" element={<Placeholder title="Terms of Service" />} />
           <Route path="/privacy" element={<Placeholder title="Privacy Policy" />} />

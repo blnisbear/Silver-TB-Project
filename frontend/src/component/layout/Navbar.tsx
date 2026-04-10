@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, isAdmin, logout } = useAuth();
   const { totalItems, openCart } = useCart();
   const { favorites } = useFavorites();
   const navigate = useNavigate();
@@ -74,6 +74,9 @@ const Navbar: React.FC = () => {
             {/* User */}
             {user ? (
               <div className="flex items-center gap-2">
+                {isAdmin && (
+                  <Link to="/admin" className="text-xs font-bold bg-orange/10 text-orange px-2 py-1 rounded-md uppercase tracking-wider mr-2 hover:bg-orange/20 transition-colors">Admin</Link>
+                )}
                 <span className="text-sm font-medium text-gray-700">{user.full_name?.split(' ')[0]}</span>
                 <button
                   onClick={handleLogout}
@@ -122,6 +125,9 @@ const Navbar: React.FC = () => {
             <Link to="/favorites" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-gray-700 hover:text-orange font-medium">
               Favorites {favorites.length > 0 && <span className="ml-1 text-red-500 font-bold">({favorites.length})</span>}
             </Link>
+            {isAdmin && (
+              <Link to="/admin" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-orange font-bold">Admin Dashboard</Link>
+            )}
             {user ? (
               <button onClick={() => { setIsOpen(false); handleLogout(); }} className="block w-full text-left px-3 py-2 text-red-500 font-medium">
                 Sign Out

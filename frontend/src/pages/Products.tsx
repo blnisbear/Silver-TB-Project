@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Search, SlidersHorizontal, Heart, ShoppingCart, X, Star, Package } from 'lucide-react';
+import { api } from '../lib/api';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../contexts/CartContext';
 import { useFavorites } from '../contexts/FavoritesContext';
@@ -18,15 +19,6 @@ interface Product {
   views: number;
 }
 
-// Demo products until backend is connected
-const DEMO_PRODUCTS: Product[] = [
-  { id: '1', name: 'Dynastes hercules', description: 'The Hercules Beetle — the longest beetle in the world. Males can reach up to 17cm in total length. Native to the rainforests of Central and South America.', price: 8500, stock: 3, category: 'Rhinoceros', images: [], is_best_seller: true, views: 1240 },
-  { id: '2', name: 'Chalcosoma atlas', description: 'Atlas Beetle — one of the largest beetles in the world, found in Southeast Asia. Males have three large horns used for combat.', price: 3200, stock: 7, category: 'Rhinoceros', images: [], is_best_seller: true, views: 890 },
-  { id: '3', name: 'Dorcus titanus', description: 'Giant Stag Beetle from Southeast Asia. The impressive mandibles of the male can reach 1/3 of their body length.', price: 5600, stock: 2, category: 'Stag', images: [], is_best_seller: false, views: 567 },
-  { id: '4', name: 'Goliathus goliatus', description: 'Goliath Beetle — one of the heaviest insects in the world by mass. Native to African tropical forests.', price: 12000, stock: 1, category: 'Flower', images: [], is_best_seller: true, views: 2100 },
-  { id: '5', name: 'Mecynorrhina torquata', description: 'Elegant flower beetle from Central Africa with striking metallic coloration in green, red, and white.', price: 2800, stock: 10, category: 'Flower', images: [], is_best_seller: false, views: 430 },
-  { id: '6', name: 'Xylotrupes gideon', description: 'Fighting Beetle popular across Southeast Asia. Hardy and great for beginners, easy to breed.', price: 900, stock: 20, category: 'Rhinoceros', images: [], is_best_seller: false, views: 750 },
-];
 
 const CATEGORIES = ['All', 'Rhinoceros', 'Stag', 'Flower'];
 const SORT_OPTIONS = [
@@ -40,7 +32,22 @@ const Products: React.FC = () => {
   const { addItem } = useCart();
   const { toggle, isFavorite } = useFavorites();
 
-  const [products] = useState<Product[]>(DEMO_PRODUCTS);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const data = await api.get<{ products: Product[] }>('/products?limit=100');
+        setProducts(data.products || []);
+      } catch (err) {
+        console.error('Failed to load products');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('All');
   const [sort, setSort] = useState('default');

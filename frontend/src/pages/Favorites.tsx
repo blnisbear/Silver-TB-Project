@@ -4,32 +4,53 @@ import { Heart, ShoppingCart, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useCart } from '../contexts/CartContext';
+import { api } from '../lib/api';
 import Swal from 'sweetalert2';
 
-// In a real app these would be fetched from the API by their IDs
-// For now we use a local lookup; Products page sets product data
-const DEMO_PRODUCTS: Record<string, { name: string; price: number; category: string; images: string[]; stock: number }> = {
-  '1': { name: 'Dynastes hercules', price: 8500, category: 'Rhinoceros', images: [], stock: 3 },
-  '2': { name: 'Chalcosoma atlas', price: 3200, category: 'Rhinoceros', images: [], stock: 7 },
-  '3': { name: 'Dorcus titanus', price: 5600, category: 'Stag', images: [], stock: 2 },
-  '4': { name: 'Goliathus goliatus', price: 12000, category: 'Flower', images: [], stock: 1 },
-  '5': { name: 'Mecynorrhina torquata', price: 2800, category: 'Flower', images: [], stock: 10 },
-  '6': { name: 'Xylotrupes gideon', price: 900, category: 'Rhinoceros', images: [], stock: 20 },
-};
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  stock: number;
+  category: string;
+  images: string[];
+  is_best_seller: boolean;
+  views: number;
+}
+
+
 
 const Favorites: React.FC = () => {
   const { favorites, toggle } = useFavorites();
   const { addItem } = useCart();
 
+  const [productsMap, setProductsMap] = React.useState<Record<string, Product>>({});
+
+  React.useEffect(() => {
+    const fetchFavoriteProducts = async () => {
+      if (favorites.length === 0) return;
+      try {
+        const { products } = await api.get<{ products: Product[] }>('/products?limit=100');
+        const map: Record<string, Product> = {};
+        products.forEach(p => { map[p.id] = p; });
+        setProductsMap(map);
+      } catch (err) {
+        console.error('Failed to fetch products');
+      }
+    };
+    fetchFavoriteProducts();
+  }, [favorites]);
+
   const handleAddToCart = (id: string) => {
-    const product = DEMO_PRODUCTS[id];
+    const product = productsMap[id];
     if (!product || product.stock === 0) return;
     addItem({ product_id: id, name: product.name, price: product.price, image: product.images?.[0] || '' });
     Swal.fire({ icon: 'success', title: 'Added to cart!', text: product.name, timer: 1000, showConfirmButton: false, position: 'top-end', toast: true });
   };
 
   const handleRemove = (id: string) => {
-    const product = DEMO_PRODUCTS[id];
+    const product = productsMap[id];
     Swal.fire({
       icon: 'warning',
       title: 'Remove from favorites?',
@@ -73,7 +94,7 @@ const Favorites: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             <AnimatePresence>
               {favorites.map((id) => {
-                const product = DEMO_PRODUCTS[id];
+                const product = productsMap[id];
                 if (!product) return null;
                 return (
                   <motion.div
