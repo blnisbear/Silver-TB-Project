@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 import { FavoritesProvider } from './contexts/FavoritesContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { ToastProvider } from './component/common/NotificationToast';
 import Navbar from './component/layout/Navbar';
 import Footer from './component/layout/Footer';
@@ -16,7 +17,7 @@ import Favorites from './pages/Favorites';
 
 const Placeholder = ({ title }: { title: string }) => (
   <div className="flex items-center justify-center min-h-[50vh]">
-    <h1 className="text-3xl font-bold text-gray-500">{title}</h1>
+    <h1 className="text-3xl font-bold text-gray-500 dark:text-gray-400">{title}</h1>
   </div>
 );
 
@@ -29,7 +30,7 @@ const GuestRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
 function AppShell() {
   return (
-    <div className="min-h-screen flex flex-col bg-white font-sans">
+    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-800 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-200">
       <Navbar />
       <main className="flex-grow">
         <Routes>
@@ -60,9 +61,13 @@ function App() {
     <AuthProvider>
       <CartProvider>
         <FavoritesProvider>
-          <ToastProvider>
-            <AppShell />
-          </ToastProvider>
+          <ThemeProvider>
+            <ToastProvider>
+            <React.Suspense fallback={<div className="flex h-screen items-center justify-center">Loading...</div>}>
+              <AppShell />
+            </React.Suspense>
+            </ToastProvider>
+          </ThemeProvider>
         </FavoritesProvider>
       </CartProvider>
     </AuthProvider>

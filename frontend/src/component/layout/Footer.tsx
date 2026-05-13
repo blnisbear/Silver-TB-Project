@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Mail, MapPin, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -29,6 +30,8 @@ const GithubIcon = ({ className }: { className?: string }) => (
 );
 
 const Footer: React.FC = () => {
+  const { t } = useTranslation();
+
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 py-16 sm:px-6 lg:px-8">
@@ -42,8 +45,8 @@ const Footer: React.FC = () => {
                 <span className="text-white font-normal uppercase text-xs tracking-widest ml-1">Bug</span>
               </span>
             </Link>
-            <p className="text-gray-400 text-sm leading-relaxed mb-6">
-              The premium destination for exotic beetle enthusiasts. Quality breeding and rare specimens from around the world.
+            <p className="text-gray-400 dark:text-gray-500 text-sm leading-relaxed mb-6">
+              {t('footer_desc')}
             </p>
             <div className="flex space-x-4">
               <a href="https://facebook.com" className="p-2 bg-gray-800 rounded-full hover:bg-orange transition-colors duration-300">
@@ -63,33 +66,33 @@ const Footer: React.FC = () => {
 
           {/* Quick Links */}
           <div className="col-span-1">
-            <h3 className="text-lg font-bold mb-6 text-white border-l-4 border-orange pl-3 uppercase tracking-wider text-sm">Quick Links</h3>
-            <ul className="space-y-4 text-gray-400 text-sm font-medium">
-              <li><Link to="/products" className="hover:text-orange transition-colors">Shop All Bettle</Link></li>
-              <li><Link to="/about" className="hover:text-orange transition-colors">Our Story</Link></li>
-              <li><Link to="/favorites" className="hover:text-orange transition-colors">Favorites</Link></li>
-              <li><Link to="/login" className="hover:text-orange transition-colors">Membership</Link></li>
+            <h3 className="text-lg font-bold mb-6 text-white border-l-4 border-orange pl-3 uppercase tracking-wider text-sm">{t('quick_links')}</h3>
+            <ul className="space-y-4 text-gray-400 dark:text-gray-500 text-sm font-medium">
+              <li><Link to="/products" className="hover:text-orange transition-colors">{t('shop_all_beetle')}</Link></li>
+              <li><Link to="/about" className="hover:text-orange transition-colors">{t('our_story')}</Link></li>
+              <li><Link to="/favorites" className="hover:text-orange transition-colors">{t('favorites')}</Link></li>
+              <li><Link to="/login" className="hover:text-orange transition-colors">{t('membership')}</Link></li>
             </ul>
           </div>
 
           {/* Support */}
           <div className="col-span-1">
-            <h3 className="text-lg font-bold mb-6 text-white border-l-4 border-orange pl-3 uppercase tracking-wider text-sm">Support</h3>
-            <ul className="space-y-4 text-gray-400 text-sm font-medium">
-              <li><Link to="/shipping" className="hover:text-orange transition-colors">Shipping Policy</Link></li>
-              <li><Link to="/terms" className="hover:text-orange transition-colors">Terms of Service</Link></li>
-              <li><Link to="/privacy" className="hover:text-orange transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/faq" className="hover:text-orange transition-colors">FAQs</Link></li>
+            <h3 className="text-lg font-bold mb-6 text-white border-l-4 border-orange pl-3 uppercase tracking-wider text-sm">{t('support')}</h3>
+            <ul className="space-y-4 text-gray-400 dark:text-gray-500 text-sm font-medium">
+              <li><Link to="/shipping" className="hover:text-orange transition-colors">{t('shipping_policy')}</Link></li>
+              <li><Link to="/terms" className="hover:text-orange transition-colors">{t('terms_of_service')}</Link></li>
+              <li><Link to="/privacy" className="hover:text-orange transition-colors">{t('privacy_policy')}</Link></li>
+              <li><Link to="/faq" className="hover:text-orange transition-colors">{t('faq')}</Link></li>
             </ul>
           </div>
 
           {/* Contact Info */}
           <div className="col-span-1">
-            <h3 className="text-lg font-bold mb-6 text-white border-l-4 border-orange pl-3 uppercase tracking-wider text-sm">Contact Us</h3>
-            <ul className="space-y-4 text-gray-400 text-sm">
+            <h3 className="text-lg font-bold mb-6 text-white border-l-4 border-orange pl-3 uppercase tracking-wider text-sm">{t('contact_us')}</h3>
+            <ul className="space-y-4 text-gray-400 dark:text-gray-500 text-sm">
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-orange flex-shrink-0" />
-                <span>123 Beetle Mansion, Silom, Bangkok 10500</span>
+                <span>{t('address_123')}</span>
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-orange flex-shrink-0" />
@@ -103,8 +106,8 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-gray-800 text-center text-gray-500 text-xs tracking-widest uppercase">
-          <p>© {new Date().getFullYear()} SILVER THIEF BUG. ALL RIGHTS RESERVED.</p>
+        <div className="mt-16 pt-8 border-t border-gray-800 text-center text-gray-500 dark:text-gray-400 text-xs tracking-widest uppercase">
+          <p>© {new Date().getFullYear()} {t('all_rights_reserved')}</p>
         </div>
       </div>
     </footer>

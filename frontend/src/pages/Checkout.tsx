@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import {
@@ -23,6 +24,7 @@ const CheckoutForm = ({ clientSecret, orderId, amount }: { clientSecret: string,
   const [isProcessing, setIsProcessing] = useState(false);
   const { clearCart } = useCart();
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,6 +78,7 @@ const CheckoutForm = ({ clientSecret, orderId, amount }: { clientSecret: string,
 };
 
 const Checkout = () => {
+  const { t } = useTranslation();
   const { items, totalPrice } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -134,50 +137,50 @@ const Checkout = () => {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-12">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Checkout</h1>
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8 text-center">{t('checkout')}</h1>
       
       {/* Steps Indicator */}
       <div className="flex items-center justify-center mb-10">
         <div className={`flex items-center gap-2 ${step >= 1 ? 'text-orange font-bold' : 'text-gray-400'}`}>
           <MapPin className="w-5 h-5" />
-          <span>Shipping</span>
+          <span>{t('shipping')}</span>
         </div>
         <div className="w-16 h-px bg-gray-300 mx-4"></div>
         <div className={`flex items-center gap-2 ${step >= 2 ? 'text-orange font-bold' : 'text-gray-400'}`}>
           <CreditCard className="w-5 h-5" />
-          <span>Payment</span>
+          <span>{t('payment')}</span>
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 p-8">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-100 dark:border-gray-700 p-8">
         {step === 1 && (
           <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-            <h2 className="text-xl font-bold mb-6 text-gray-800">1. Shipping Details</h2>
+            <h2 className="text-xl font-bold mb-6 text-gray-800 dark:text-gray-200">{t('shipping_details_step')}</h2>
             <form onSubmit={handleProceedToPayment} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Full Shipping Address</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">{t('full_shipping_address')}</label>
                 <textarea
                   required
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="123 Example Street, Bangkok 10110..."
-                  className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-orange/50 transition-shadow min-h-[120px]"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-orange/50 transition-shadow min-h-[120px]"
                 />
               </div>
 
               {/* Order Summary snippet */}
-              <div className="bg-gray-50 p-4 rounded-xl border border-gray-100">
-                <h3 className="font-semibold text-gray-800 mb-2">Order Summary</h3>
+              <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-xl border border-gray-100 dark:border-gray-700">
+                <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-2">{t('order_summary')}</h3>
                 <div className="space-y-2 mb-4">
                   {items.map(item => (
-                    <div key={item.product_id} className="flex justify-between text-sm text-gray-600">
+                    <div key={item.product_id} className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
                       <span>{item.quantity}x {item.name}</span>
                       <span>฿{(item.price * item.quantity).toLocaleString()}</span>
                     </div>
                   ))}
                 </div>
-                <div className="flex justify-between font-bold text-lg text-gray-900 border-t pt-2">
-                  <span>Total</span>
+                <div className="flex justify-between font-bold text-lg text-gray-900 dark:text-gray-100 border-t pt-2">
+                  <span>{t('total')}</span>
                   <span>฿{totalPrice.toLocaleString()}</span>
                 </div>
               </div>
@@ -195,7 +198,7 @@ const Checkout = () => {
 
         {step === 2 && clientSecret && (
           <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }}>
-            <h2 className="text-xl font-bold mb-6 text-gray-800">2. Payment</h2>
+            <h2 className="text-xl font-bold mb-6 text-gray-800 dark:text-gray-200">{t('payment_step')}</h2>
             <div className="mb-6 p-4 bg-orange/10 text-orange-800 rounded-xl flex items-start gap-3">
               <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5 text-orange" />
               <p className="text-sm">
@@ -215,10 +218,8 @@ const Checkout = () => {
 
             <button
               onClick={() => setStep(1)}
-              className="mt-6 text-center w-full text-sm text-gray-500 hover:text-gray-700 font-medium"
-            >
-              ← Back to Shipping
-            </button>
+              className="mt-6 text-center w-full text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 font-medium"
+            >{t('back_to_shipping')}</button>
           </motion.div>
         )}
       </div>

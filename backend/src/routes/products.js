@@ -83,7 +83,7 @@ router.get('/:id', async (req, res) => {
 
 // POST /api/products — admin only
 router.post('/', authenticate, requireAdmin, async (req, res) => {
-  const { name, description, price, stock, category, images, is_best_seller } = req.body;
+  const { name, name_th, description, description_th, price, stock, category, images, is_best_seller } = req.body;
 
   if (!name || price === undefined || stock === undefined) {
     return res.status(400).json({ error: 'name, price, and stock are required' });
@@ -91,7 +91,7 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
 
   const { data, error } = await supabase
     .from('products')
-    .insert({ name, description, price, stock, category, images: images || [], is_best_seller: is_best_seller || false, is_active: true, views: 0 })
+    .insert({ name, name_th, description, description_th, price, stock, category, images: images || [], is_best_seller: is_best_seller || false, is_active: true, views: 0 })
     .select()
     .single();
 
@@ -101,7 +101,7 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
 
 // PATCH /api/products/:id — admin only
 router.patch('/:id', authenticate, requireAdmin, async (req, res) => {
-  const allowed = ['name', 'description', 'price', 'stock', 'category', 'images', 'is_best_seller', 'is_active'];
+  const allowed = ['name', 'name_th', 'description', 'description_th', 'price', 'stock', 'category', 'images', 'is_best_seller', 'is_active'];
   const updates = Object.fromEntries(
     Object.entries(req.body).filter(([k]) => allowed.includes(k))
   );

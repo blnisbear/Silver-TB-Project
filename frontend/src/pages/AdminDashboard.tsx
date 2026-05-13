@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Navigate } from 'react-router-dom';
 import { Package, ShoppingBag, Plus, Edit2, Trash2, X, Upload } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -9,7 +10,9 @@ import Swal from 'sweetalert2';
 interface Product {
   id: string;
   name: string;
+  name_th?: string;
   description: string;
+  description_th?: string;
   price: number;
   stock: number;
   category: string;
@@ -32,6 +35,7 @@ interface Order {
 }
 
 const AdminDashboard = () => {
+  const { t, i18n } = useTranslation();
   const { user, loading, isAdmin } = useAuth();
   const [activeTab, setActiveTab] = useState<'products' | 'orders'>('products');
 
@@ -127,31 +131,29 @@ const AdminDashboard = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="text-3xl font-extrabold text-gray-900 border-l-8 border-orange pl-4">Admin Dashboard</h1>
+        <h1 className="text-3xl font-extrabold text-gray-900 dark:text-gray-100 border-l-8 border-orange pl-4">Admin Dashboard</h1>
       </div>
 
       {/* Tabs */}
-      <div className="flex space-x-2 mb-8 border-b border-gray-200">
+      <div className="flex space-x-2 mb-8 border-b border-gray-200 dark:border-gray-700">
         <button
           onClick={() => setActiveTab('products')}
           className={`flex items-center gap-2 px-6 py-3 font-semibold text-sm rounded-t-xl transition-colors ${
             activeTab === 'products' ? 'bg-orange text-white' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
           }`}
         >
-          <Package className="w-5 h-5" /> Products
-        </button>
+          <Package className="w-5 h-5" />{t('products')}</button>
         <button
           onClick={() => setActiveTab('orders')}
           className={`flex items-center gap-2 px-6 py-3 font-semibold text-sm rounded-t-xl transition-colors ${
             activeTab === 'orders' ? 'bg-orange text-white' : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
           }`}
         >
-          <ShoppingBag className="w-5 h-5" /> Orders
-        </button>
+          <ShoppingBag className="w-5 h-5" />{t('orders')}</button>
       </div>
 
       {/* Content */}
-      <div className="bg-white rounded-2xl shadow border border-gray-100 p-6 min-h-[500px]">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow border border-gray-100 dark:border-gray-700 p-6 min-h-[500px]">
         {activeTab === 'products' && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
             {!isAddingProduct && !isEditingProduct ? (
@@ -161,31 +163,30 @@ const AdminDashboard = () => {
                     onClick={() => { setProductForm({ category: 'Rhinoceros', is_best_seller: false, is_active: true }); setIsAddingProduct(true); }}
                     className="flex items-center gap-2 px-4 py-2 bg-orange text-white font-bold rounded-lg hover:bg-orange-600 transition-colors"
                   >
-                    <Plus className="w-4 h-4" /> Add Product
-                  </button>
+                    <Plus className="w-4 h-4" />{t('add_product')}</button>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="border-b-2 border-gray-100 bg-gray-50/50">
-                        <th className="p-4 font-semibold text-gray-600">Product</th>
-                        <th className="p-4 font-semibold text-gray-600">Category</th>
-                        <th className="p-4 font-semibold text-gray-600">Price</th>
-                        <th className="p-4 font-semibold text-gray-600">Stock</th>
-                        <th className="p-4 font-semibold text-gray-600">Status</th>
-                        <th className="p-4 font-semibold text-gray-600">Actions</th>
+                      <tr className="border-b-2 border-gray-100 dark:border-gray-700 bg-gray-50/50">
+                        <th className="p-4 font-semibold text-gray-600 dark:text-gray-400">{t('product')}</th>
+                        <th className="p-4 font-semibold text-gray-600 dark:text-gray-400">{t('category')}</th>
+                        <th className="p-4 font-semibold text-gray-600 dark:text-gray-400">{t('price')}</th>
+                        <th className="p-4 font-semibold text-gray-600 dark:text-gray-400">{t('stock')}</th>
+                        <th className="p-4 font-semibold text-gray-600 dark:text-gray-400">{t('status')}</th>
+                        <th className="p-4 font-semibold text-gray-600 dark:text-gray-400">{t('actions')}</th>
                       </tr>
                     </thead>
                     <tbody>
                       {products.map(p => (
-                        <tr key={p.id} className="border-b border-gray-100 hover:bg-gray-50/50">
+                        <tr key={p.id} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50/50">
                           <td className="p-4">
-                            <div className="font-semibold text-gray-800">{p.name}</div>
-                            <div className="text-xs text-gray-400">{p.is_best_seller ? 'Best Seller' : ''}</div>
+                            <div className="font-semibold text-gray-800 dark:text-gray-200">{i18n.language === 'th' && p.name_th ? p.name_th : p.name}</div>
+                            <div className="text-xs text-gray-400 dark:text-gray-500">{p.is_best_seller ? t('best_seller') : ''}</div>
                           </td>
-                          <td className="p-4 text-gray-600">{p.category}</td>
-                          <td className="p-4 text-gray-600">฿{p.price.toLocaleString()}</td>
-                          <td className="p-4 text-gray-600">{p.stock}</td>
+                          <td className="p-4 text-gray-600 dark:text-gray-400">{p.category}</td>
+                          <td className="p-4 text-gray-600 dark:text-gray-400">฿{p.price.toLocaleString()}</td>
+                          <td className="p-4 text-gray-600 dark:text-gray-400">{p.stock}</td>
                           <td className="p-4">
                             <span className={`px-2 py-1 text-xs rounded-full font-semibold ${p.is_active ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
                               {p.is_active ? 'Active' : 'Inactive'}
@@ -202,40 +203,48 @@ const AdminDashboard = () => {
                         </tr>
                       ))}
                       {products.length === 0 && (
-                        <tr><td colSpan={6} className="p-8 text-center text-gray-400">No products found.</td></tr>
+                        <tr><td colSpan={6} className="p-8 text-center text-gray-400 dark:text-gray-500">{t('no_products_found')}</td></tr>
                       )}
                     </tbody>
                   </table>
                 </div>
               </>
             ) : (
-              <div className="max-w-2xl mx-auto border border-gray-100 rounded-xl p-6 shadow-sm">
+              <div className="max-w-2xl mx-auto border border-gray-100 dark:border-gray-700 rounded-xl p-6 shadow-sm">
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-bold">{isEditingProduct ? 'Edit Product' : 'Add Product'}</h2>
                   <button onClick={() => { setIsAddingProduct(false); setIsEditingProduct(null); }} className="p-2 hover:bg-gray-100 rounded-full">
-                    <X className="w-5 h-5 text-gray-500" />
+                    <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
                   </button>
                 </div>
                 <form onSubmit={handleProductSubmit} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
-                    <div className="col-span-2">
-                      <label className="block text-sm font-medium mb-1 text-gray-700">Name</label>
+                    <div className="col-span-1">
+                      <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">{t('name')} (EN)</label>
                       <input required type="text" value={productForm.name || ''} onChange={e => setProductForm({ ...productForm, name: e.target.value })} className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange/50 outline-none" />
                     </div>
-                    <div className="col-span-2">
-                      <label className="block text-sm font-medium mb-1 text-gray-700">Description</label>
+                    <div className="col-span-1">
+                      <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">{t('name')} (TH)</label>
+                      <input type="text" value={productForm.name_th || ''} onChange={e => setProductForm({ ...productForm, name_th: e.target.value })} className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange/50 outline-none" />
+                    </div>
+                    <div className="col-span-1">
+                      <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">{t('description')} (EN)</label>
                       <textarea required value={productForm.description || ''} onChange={e => setProductForm({ ...productForm, description: e.target.value })} className="w-full border rounded-lg px-3 py-2 min-h-[100px] focus:ring-2 focus:ring-orange/50 outline-none" />
                     </div>
+                    <div className="col-span-1">
+                      <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">{t('description')} (TH)</label>
+                      <textarea value={productForm.description_th || ''} onChange={e => setProductForm({ ...productForm, description_th: e.target.value })} className="w-full border rounded-lg px-3 py-2 min-h-[100px] focus:ring-2 focus:ring-orange/50 outline-none" />
+                    </div>
                     <div>
-                      <label className="block text-sm font-medium mb-1 text-gray-700">Price (฿)</label>
+                      <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">Price (฿)</label>
                       <input required type="number" min="0" value={productForm.price || ''} onChange={e => setProductForm({ ...productForm, price: Number(e.target.value) })} className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange/50 outline-none" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-1 text-gray-700">Stock</label>
+                      <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">{t('stock')}</label>
                       <input required type="number" min="0" value={productForm.stock || 0} onChange={e => setProductForm({ ...productForm, stock: Number(e.target.value) })} className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange/50 outline-none" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-1 text-gray-700">Category</label>
+                      <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">{t('category')}</label>
                       <select value={productForm.category || 'Rhinoceros'} onChange={e => setProductForm({ ...productForm, category: e.target.value })} className="w-full border rounded-lg px-3 py-2 outline-none">
                         <option value="Rhinoceros">Rhinoceros</option>
                         <option value="Stag">Stag</option>
@@ -245,15 +254,15 @@ const AdminDashboard = () => {
                     <div className="flex items-center gap-4 mt-6">
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" checked={productForm.is_best_seller || false} onChange={e => setProductForm({ ...productForm, is_best_seller: e.target.checked })} className="accent-orange w-4 h-4" />
-                        <span className="text-sm font-medium text-gray-700">Best Seller</span>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('best_seller')}</span>
                       </label>
                       <label className="flex items-center gap-2 cursor-pointer">
                         <input type="checkbox" checked={productForm.is_active ?? true} onChange={e => setProductForm({ ...productForm, is_active: e.target.checked })} className="accent-orange w-4 h-4" />
-                        <span className="text-sm font-medium text-gray-700">Active</span>
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('active')}</span>
                       </label>
                     </div>
                     <div className="col-span-2">
-                       <label className="block text-sm font-medium mb-1 text-gray-700">Image URL (Optional)</label>
+                       <label className="block text-sm font-medium mb-1 text-gray-700 dark:text-gray-300">{t('image_url_optional')}</label>
                        <input type="text" placeholder="https://..." value={productForm.images?.[0] || ''} onChange={e => setProductForm({ ...productForm, images: e.target.value ? [e.target.value] : [] })} className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-orange/50 outline-none" />
                     </div>
                   </div>
@@ -271,23 +280,23 @@ const AdminDashboard = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b-2 border-gray-100 bg-gray-50/50">
-                    <th className="p-4 font-semibold text-gray-600">ID / Date</th>
-                    <th className="p-4 font-semibold text-gray-600">Customer</th>
-                    <th className="p-4 font-semibold text-gray-600">Total</th>
-                    <th className="p-4 font-semibold text-gray-600">Payment</th>
-                    <th className="p-4 font-semibold text-gray-600">Status</th>
+                  <tr className="border-b-2 border-gray-100 dark:border-gray-700 bg-gray-50/50">
+                    <th className="p-4 font-semibold text-gray-600 dark:text-gray-400">{t('id_date')}</th>
+                    <th className="p-4 font-semibold text-gray-600 dark:text-gray-400">{t('customer')}</th>
+                    <th className="p-4 font-semibold text-gray-600 dark:text-gray-400">{t('total')}</th>
+                    <th className="p-4 font-semibold text-gray-600 dark:text-gray-400">{t('payment')}</th>
+                    <th className="p-4 font-semibold text-gray-600 dark:text-gray-400">{t('status')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   {orders.map(o => (
-                    <tr key={o.id} className="border-b border-gray-100 hover:bg-gray-50/50">
+                    <tr key={o.id} className="border-b border-gray-100 dark:border-gray-700 hover:bg-gray-50/50">
                       <td className="p-4">
-                        <div className="font-mono text-sm text-gray-800">{o.id.slice(0,8)}...</div>
-                        <div className="text-xs text-gray-400">{new Date(o.created_at).toLocaleDateString()}</div>
+                        <div className="font-mono text-sm text-gray-800 dark:text-gray-200">{o.id.slice(0,8)}...</div>
+                        <div className="text-xs text-gray-400 dark:text-gray-500">{new Date(o.created_at).toLocaleDateString()}</div>
                       </td>
-                      <td className="p-4 text-gray-600 font-medium">{o.profiles?.full_name || 'Unknown'}</td>
-                      <td className="p-4 text-gray-600 font-bold text-orange">฿{o.total.toLocaleString()}</td>
+                      <td className="p-4 text-gray-600 dark:text-gray-400 font-medium">{o.profiles?.full_name || 'Unknown'}</td>
+                      <td className="p-4 text-gray-600 dark:text-gray-400 font-bold text-orange">฿{o.total.toLocaleString()}</td>
                       <td className="p-4">
                         <span className={`px-2 py-1 text-xs rounded-full font-semibold ${o.payment_status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>
                           {o.payment_status.toUpperCase()}
@@ -297,19 +306,19 @@ const AdminDashboard = () => {
                         <select 
                           value={o.status}
                           onChange={(e) => handleUpdateOrderStatus(o.id, e.target.value)}
-                          className="border rounded px-2 py-1 text-sm bg-white outline-none focus:ring-1 focus:ring-orange"
+                          className="border rounded px-2 py-1 text-sm bg-white dark:bg-gray-800 outline-none focus:ring-1 focus:ring-orange"
                         >
-                          <option value="pending">Pending</option>
-                          <option value="confirmed">Confirmed</option>
-                          <option value="shipped">Shipped</option>
-                          <option value="delivered">Delivered</option>
-                          <option value="cancelled">Cancelled</option>
+                          <option value="pending">{t('pending')}</option>
+                          <option value="confirmed">{t('confirmed')}</option>
+                          <option value="shipped">{t('shipped')}</option>
+                          <option value="delivered">{t('delivered')}</option>
+                          <option value="cancelled">{t('cancelled')}</option>
                         </select>
                       </td>
                     </tr>
                   ))}
                   {orders.length === 0 && (
-                    <tr><td colSpan={5} className="p-8 text-center text-gray-400">No orders found.</td></tr>
+                    <tr><td colSpan={5} className="p-8 text-center text-gray-400 dark:text-gray-500">{t('no_orders_found')}</td></tr>
                   )}
                 </tbody>
               </table>
