@@ -18,7 +18,8 @@ const Navbar: React.FC = () => {
   const { theme, toggleTheme } = useTheme();
 
   const toggleLanguage = () => {
-    const newLang = i18n.language === 'th' ? 'en' : 'th';
+    const currentLang = i18n.language || i18n.options.lng || 'th';
+    const newLang = currentLang.startsWith('th') ? 'en' : 'th';
     i18n.changeLanguage(newLang);
   };
 
@@ -95,7 +96,7 @@ const Navbar: React.FC = () => {
               className="flex items-center justify-center w-8 h-8 rounded-full border border-gray-300 dark:border-gray-600 text-xs font-bold text-gray-600 dark:text-gray-400 hover:text-orange hover:border-orange transition-colors uppercase"
               title={t('language')}
             >
-              {i18n.language === 'th' ? 'TH' : 'EN'}
+              {i18n.language?.startsWith('th') ? 'TH' : 'EN'}
             </button>
 
             {/* User */}
@@ -159,7 +160,7 @@ const Navbar: React.FC = () => {
                 onClick={toggleLanguage}
                 className="px-3 py-1 text-sm font-medium rounded-md border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-700"
               >
-                {i18n.language === 'th' ? 'Switch to English' : 'เปลี่ยนเป็นภาษาไทย'}
+                {i18n.language?.startsWith('th') ? 'Switch to English' : 'เปลี่ยนเป็นภาษาไทย'}
               </button>
             </div>
             <Link to="/" onClick={() => setIsOpen(false)} className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-orange font-medium">{t('home')}</Link>

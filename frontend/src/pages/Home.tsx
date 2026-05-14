@@ -27,10 +27,51 @@ const BEETLE_FACTS = [
   },
 ];
 
-const FACEBOOK_LINKS = [
-  { labelKey: 'fb_main_page', url: 'https://www.facebook.com/silverthiefbug', descriptionKey: 'fb_main_desc' },
-  { labelKey: 'fb_community', url: 'https://www.facebook.com/groups/silverthiefbug', descriptionKey: 'fb_community_desc' },
-  { labelKey: 'fb_live_sales', url: 'https://www.facebook.com/silverthiefbug/live', descriptionKey: 'fb_live_sales_desc' },
+const SOCIAL_LINKS = [
+  { 
+    label: 'Facebook', 
+    url: 'https://www.facebook.com/profile.php?id=61570775870548&locale=th_TH', 
+    descriptionKey: 'fb_main_desc',
+    Icon: ({ className }: { className?: string }) => (
+      <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+      </svg>
+    ),
+    colorClass: 'bg-blue-600',
+    hoverClass: 'hover:border-blue-500/30',
+    textHoverClass: 'group-hover:text-blue-600',
+    textColor: 'text-blue-600'
+  },
+  { 
+    label: 'Instagram', 
+    url: 'https://www.instagram.com/silverthiefbug.official/?utm_source=ig_web_button_share_sheet', 
+    descriptionKey: 'Follow our official Instagram for photos',
+    Icon: ({ className }: { className?: string }) => (
+      <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+      </svg>
+    ),
+    colorClass: 'bg-gradient-to-tr from-yellow-400 via-pink-500 to-purple-500',
+    hoverClass: 'hover:border-pink-500/30',
+    textHoverClass: 'group-hover:text-pink-600',
+    textColor: 'text-pink-600'
+  },
+  { 
+    label: 'TikTok', 
+    url: 'https://www.tiktok.com/@silver.thief.bug', 
+    descriptionKey: 'Watch our exotic beetles in action',
+    Icon: ({ className }: { className?: string }) => (
+      <svg className={className} viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 2.23-1.15 4.39-2.9 5.85-1.78 1.48-4.22 2.1-6.49 1.64-2.26-.45-4.28-1.92-5.46-3.95-1.19-2.04-1.39-4.59-.51-6.79.88-2.2 2.7-3.95 4.95-4.7 2.27-.75 4.8-.57 6.88.6v4.22c-1.02-.62-2.27-.85-3.41-.6-1.13.25-2.12.98-2.68 1.98-.56 1-.68 2.22-.32 3.3.36 1.08 1.18 1.95 2.22 2.36 1.05.41 2.26.35 3.26-.16 1-.51 1.71-1.43 1.98-2.52.12-.47.16-.96.15-1.45V.02h-4.32z"/>
+      </svg>
+    ),
+    colorClass: 'bg-black dark:bg-white',
+    hoverClass: 'hover:border-gray-500/30',
+    textHoverClass: 'group-hover:text-gray-600 dark:group-hover:text-gray-300',
+    textColor: 'text-gray-900 dark:text-white'
+  },
 ];
 
 const FEATURES = [
@@ -78,7 +119,7 @@ const Home: React.FC = () => {
               >{t('explore_collection')}<ArrowRight className="w-5 h-5" />
               </Link>
               <a
-                href="https://www.facebook.com/silverthiefbug"
+                href="https://www.facebook.com/profile.php?id=61570775870548&locale=th_TH"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-8 py-4 border-2 border-white/20 text-white font-bold rounded-full hover:bg-white/10 transition-colors"
@@ -157,7 +198,7 @@ const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* Facebook Links */}
+      {/* Social Links */}
       <section className="py-20 bg-white dark:bg-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div {...fadeUp} className="text-center mb-14">
@@ -167,7 +208,7 @@ const Home: React.FC = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {FACEBOOK_LINKS.map((link, idx) => (
+            {SOCIAL_LINKS.map((link, idx) => (
               <motion.a
                 key={idx}
                 href={link.url}
@@ -175,18 +216,16 @@ const Home: React.FC = () => {
                 rel="noopener noreferrer"
                 {...fadeUp}
                 transition={{ duration: 0.6, delay: idx * 0.1 }}
-                className="group flex flex-col items-start p-6 rounded-2xl border-2 border-gray-100 dark:border-gray-700 hover:border-blue-500/30 hover:shadow-lg transition-all bg-gradient-to-br from-white to-blue-50/50"
+                className={`group flex flex-col items-start p-6 rounded-2xl border-2 border-gray-100 dark:border-gray-700 ${link.hoverClass} hover:shadow-lg transition-all bg-gradient-to-br from-white to-gray-50/50 dark:from-gray-800 dark:to-gray-900`}
               >
-                <div className="p-3 bg-blue-600 rounded-xl mb-4">
-                  <svg className="w-6 h-6 text-white" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-                  </svg>
+                <div className={`p-3 ${link.colorClass} text-white dark:text-black rounded-xl mb-4`}>
+                  <link.Icon className="w-6 h-6 text-white dark:text-gray-900" />
                 </div>
-                <h3 className="font-bold text-gray-900 dark:text-gray-100 mb-1 group-hover:text-blue-600 transition-colors">
-                  {t(link.labelKey)}
+                <h3 className={`font-bold text-gray-900 dark:text-gray-100 mb-1 transition-colors ${link.textHoverClass}`}>
+                  {link.label}
                 </h3>
                 <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed flex-1">{t(link.descriptionKey)}</p>
-                <div className="flex items-center gap-1 mt-4 text-blue-600 text-sm font-semibold">
+                <div className={`flex items-center gap-1 mt-4 ${link.textColor} text-sm font-semibold`}>
                   {t('visit')} <ExternalLink className="w-3.5 h-3.5" />
                 </div>
               </motion.a>

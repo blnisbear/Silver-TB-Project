@@ -1,5 +1,6 @@
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider } from './contexts/CartContext';
 import { FavoritesProvider } from './contexts/FavoritesContext';
@@ -14,6 +15,7 @@ import Login from './pages/Login';
 import Checkout from './pages/Checkout';
 import AdminDashboard from './pages/AdminDashboard';
 import Favorites from './pages/Favorites';
+import About from './pages/About';
 
 const Placeholder = ({ title }: { title: string }) => (
   <div className="flex items-center justify-center min-h-[50vh]">
@@ -29,6 +31,40 @@ const GuestRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 };
 
 function AppShell() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if (!user) return;
+
+    let timeoutId: NodeJS.Timeout;
+
+    const resetTimer = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        logout();
+        Swal.fire({
+          icon: 'info',
+          title: 'Session Expired',
+          text: 'You have been logged out due to 15 minutes of inactivity.',
+          confirmButtonColor: '#FF922B'
+        }).then(() => {
+          navigate('/login');
+        });
+      }, 15 * 60 * 1000); // 15 minutes
+    };
+
+    resetTimer();
+
+    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart'];
+    events.forEach(event => document.addEventListener(event, resetTimer));
+
+    return () => {
+      clearTimeout(timeoutId);
+      events.forEach(event => document.removeEventListener(event, resetTimer));
+    };
+  }, [user, logout, navigate]);
+
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-800 dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans transition-colors duration-200">
       <Navbar />
@@ -38,7 +74,7 @@ function AppShell() {
           <Route path="/products" element={<Products />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/login" element={<GuestRoute><Login /></GuestRoute>} />
-          <Route path="/about" element={<Placeholder title="About Us" />} />
+          <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Placeholder title="Contact Us" />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/admin" element={<AdminDashboard />} />
