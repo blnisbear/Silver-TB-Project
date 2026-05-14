@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
 import { useAuth } from './AuthContext';
 import Swal from 'sweetalert2';
 
@@ -13,6 +13,13 @@ const FavoritesContext = createContext<FavoritesContextType | null>(null);
 export const FavoritesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { user } = useAuth();
   const [favorites, setFavorites] = useState<string[]>([]);
+
+  // Clear favorites when user logs out or changes
+  useEffect(() => {
+    if (!user) {
+      setFavorites([]);
+    }
+  }, [user]);
 
   const toggle = useCallback((product_id: string) => {
     if (!user) {

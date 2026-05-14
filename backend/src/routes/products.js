@@ -92,11 +92,10 @@ router.post('/', authenticate, requireAdmin, async (req, res) => {
   const { data, error } = await supabase
     .from('products')
     .insert({ name, name_th, description, description_th, price, stock, category, images: images || [], is_best_seller: is_best_seller || false, is_active: true, views: 0 })
-    .select()
-    .single();
+    .select();
 
   if (error) return res.status(400).json({ error: error.message });
-  res.status(201).json(data);
+  res.status(201).json(data?.[0] || {});
 });
 
 // PATCH /api/products/:id — admin only
@@ -110,11 +109,10 @@ router.patch('/:id', authenticate, requireAdmin, async (req, res) => {
     .from('products')
     .update(updates)
     .eq('id', req.params.id)
-    .select()
-    .single();
+    .select();
 
   if (error) return res.status(400).json({ error: error.message });
-  res.json(data);
+  res.json(data?.[0] || {});
 });
 
 // DELETE /api/products/:id — admin only (soft delete)
